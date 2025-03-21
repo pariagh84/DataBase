@@ -2,11 +2,9 @@ package db;
 
 import java.util.ArrayList;
 
-import static java.lang.reflect.Array.set;
-
 public class Database {
 
-    private static ArrayList<Entity> entities = new ArrayList<>();
+    private static final ArrayList<Entity> entities = new ArrayList<>();
 
     public static void add(Entity e) {
         entities.add(e);
@@ -23,8 +21,12 @@ public class Database {
     }
 
     public static void delete(int id) throws EntityNotFoundException {
-        entities.removeIf(e -> e.id == id);
-        throw new EntityNotFoundException(id);
+        boolean flag = entities.removeIf(e -> e.id == id);
+        if (!flag) {
+            throw new EntityNotFoundException(id);
+        } else {
+            entities.removeIf(e -> e.id == id);
+        }
     }
 
     public static void update(Entity e) throws EntityNotFoundException {
