@@ -24,9 +24,8 @@ public class Database {
         boolean flag = entities.removeIf(e -> e.id == id);
         if (!flag) {
             throw new EntityNotFoundException(id);
-        } else {
-            entities.removeIf(e -> e.id == id);
         }
+        entities.removeIf(e -> e.id == id);
     }
 
     public static void update(Entity e) throws EntityNotFoundException {
