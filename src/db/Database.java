@@ -6,9 +6,11 @@ public class Database {
 
     private static final ArrayList<Entity> entities = new ArrayList<>();
 
+    private static int newID = 1;
+
     public static void add(Entity e) {
         entities.add(e);
-        e.id = entities.indexOf(e) + 1;
+        e.id = newID++;
     }
 
     public static Entity get(int id) throws EntityNotFoundException {
