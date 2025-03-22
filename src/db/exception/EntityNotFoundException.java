@@ -1,4 +1,4 @@
-package db;
+package db.exception;
 
 public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException() {
