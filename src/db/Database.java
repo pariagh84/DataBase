@@ -1,5 +1,7 @@
 package db;
 
+import db.exception.*;
+
 import java.util.ArrayList;
 
 public class Database {
@@ -7,6 +9,8 @@ public class Database {
     private static final ArrayList<Entity> entities = new ArrayList<>();
 
     private static int newID = 1;
+
+    private Database() {}
 
     public static void add(Entity e) {
         entities.add(e);
