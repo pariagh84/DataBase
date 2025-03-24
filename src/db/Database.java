@@ -12,46 +12,28 @@ public class Database {
 
     public static void add(Entity e) {
         e.id = newID++;
-        try {
-            Entity clonedEntity = (Entity) e.clone();
-            entities.add(clonedEntity);
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException("Cloning failed", ex);
-        }
+        Entity copiedEntity = e.copy();
+        entities.add(copiedEntity);
+
     }
 
     public static Entity get(int id) throws EntityNotFoundException {
         for (Entity e : entities) {
             if (e.id == id) {
-                try {
-                    return (Entity) e.clone();
-                } catch (CloneNotSupportedException ex) {
-                    throw new RuntimeException("Cloning failed", ex);
-                }
+                return e.copy();
             }
         }
         throw new EntityNotFoundException(id);
     }
 
-    public static void delete(int id) throws EntityNotFoundException {
-        boolean flag = entities.removeIf(e -> e.id == id);
-        if (!flag) {
-            throw new EntityNotFoundException(id);
-        }
-    }
-
-    public static void update(Entity e) throws EntityNotFoundException {
-        for (Entity entity : entities) {
-            if (entity.id == e.id) {
-                int index = entities.indexOf(entity);
-                try {
-                    entities.set(index, (Entity) e.clone());
-                } catch (CloneNotSupportedException ex) {
-                    throw new RuntimeException("Cloning failed", ex);
+        public static void update(Entity e) throws EntityNotFoundException {
+            for (Entity entity : entities) {
+                if (entity.id == e.id) {
+                    int index = entities.indexOf(entity);
+                    entities.set(index, e.copy());
+                    return;
                 }
-                return;
             }
+            throw new EntityNotFoundException(e.id);
         }
-        throw new EntityNotFoundException(e.id);
     }
-}
