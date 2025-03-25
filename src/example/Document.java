@@ -34,10 +34,14 @@ public class Document extends Entity implements Trackable {
     @Override
     public Entity copy() {
         Document copyDocument = new Document(this.content);
-        copyDocument.id = id;
+        copyDocument.id = this.id;
         copyDocument.content = this.content;
-        copyDocument.creationDate = this.creationDate;
-        copyDocument.lastModificationDate = this.lastModificationDate;
+        if (this.creationDate != null) {
+            copyDocument.creationDate = (Date) this.creationDate.clone();
+        }
+        if (this.lastModificationDate != null) {
+            copyDocument.lastModificationDate = (Date) this.lastModificationDate.clone();
+        }
         return copyDocument;
     }
 
