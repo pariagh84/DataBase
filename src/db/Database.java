@@ -3,22 +3,31 @@ package db;
 import db.exception.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Database {
     private static final ArrayList<Entity> entities = new ArrayList<>();
     private static int newID = 1;
-    private static HashMap<Integer, Validator> validators = new HashMap<>();
+    private static final HashMap<Integer, Validator> validators = new HashMap<>();
 
     private Database() {}
 
     public static void add(Entity e) throws InvalidEntityException {
-        Validator validator = validators.get(e.getEntityCode());
-        validator.validate(e);
+        //Validator validator = validators.get(e.getEntityCode());
+        //validator.validate(e);
         e.id = newID++;
         Entity copiedEntity = e.copy();
+        Date now = new Date();
+        if (copiedEntity instanceof Trackable t) {
+            t.setCreationDate(now);
+            t.setLastModificationDate(now);
+        }
+        if (e instanceof Trackable original) {
+            original.setCreationDate(now);
+            original.setLastModificationDate(now);
+        }
         entities.add(copiedEntity);
-
     }
 
     public static Entity get(int id) throws EntityNotFoundException {
@@ -31,12 +40,20 @@ public class Database {
     }
 
         public static void update(Entity e) throws EntityNotFoundException, InvalidEntityException {
-            Validator validator = validators.get(e.getEntityCode());
-            validator.validate(e);
+            //Validator validator = validators.get(e.getEntityCode());
+            //validator.validate(e);
             for (Entity entity : entities) {
                 if (entity.id == e.id) {
                     int index = entities.indexOf(entity);
-                    entities.set(index, e.copy());
+                    Entity copiedEntity = e.copy();
+                    Date now = new Date();
+                    if (copiedEntity instanceof Trackable t) {
+                        t.setLastModificationDate(now);
+                    }
+                    if (e instanceof Trackable original) {
+                        original.setLastModificationDate(now);
+                    }
+                    entities.set(index, copiedEntity);
                     return;
                 }
             }
