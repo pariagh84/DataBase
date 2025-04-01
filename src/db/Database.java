@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Database {
-    private static final ArrayList<Entity> entities = new ArrayList<>();
+    public static final ArrayList<Entity> entities = new ArrayList<>();
     private static int newID = 1;
     private static final HashMap<Integer, Validator> validators = new HashMap<>();
 
@@ -65,5 +65,15 @@ public class Database {
             throw new IllegalArgumentException("Entity with code " + entityCode + " already exists");
         }
         validators.put(entityCode, validator);
+    }
+
+    public static ArrayList<Entity> getAll(int entityCode) {
+        ArrayList<Entity> wanted = new ArrayList<>();
+        for (Entity e : entities) {
+            if (e.id == entityCode) {
+                wanted.add(e.copy());
+            }
+        }
+        return wanted;
     }
 }
