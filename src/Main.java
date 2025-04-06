@@ -91,21 +91,13 @@ public class Main {
         int taskId = Integer.parseInt(scanner.nextLine());
         System.out.println("Title:");
         String title = scanner.nextLine();
-        StepService.saveStep(taskId, title);
-        Step step = null;
-        for (Entity e : db.Database.entities) {
-            if (e instanceof Step && ((Step) e).taskRef == taskId && ((Step) e).title.equals(title)) {
-                step = (Step) e;
-                break;
-            }
-        }
+        Step step = StepService.saveStep(taskId, title);
         System.out.println("Step saved successfully.");
-        assert step != null;
         System.out.println("ID: " + step.id);
         System.out.println("Creation Date: " + step.getCreationDate());
     }
 
-    private static void handleDelete(Scanner scanner) {
+    private static void handleDelete(Scanner scanner) throws InvalidEntityException {
         System.out.println("ID:");
         int id = Integer.parseInt(scanner.nextLine());
         Entity removed = null;
@@ -125,7 +117,7 @@ public class Main {
         System.out.println("Entity with ID=" + id + " successfully deleted.");
     }
 
-    private static void handleUpdateTask(Scanner scanner) throws InvalidEntityException {
+    private static void handleUpdateTask(Scanner scanner) throws InvalidEntityException, ParseException {
         System.out.println("ID:");
         int id = Integer.parseInt(scanner.nextLine());
         Task task = TaskService.getTaskById(id);

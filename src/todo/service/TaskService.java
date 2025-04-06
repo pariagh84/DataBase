@@ -5,6 +5,8 @@ import db.exception.InvalidEntityException;
 import todo.entity.Task;
 import todo.entity.Step;
 
+import java.util.ArrayList;
+
 import static db.Database.*;
 
 public class TaskService {
@@ -22,8 +24,7 @@ public class TaskService {
             throw new InvalidEntityException("Task with ID=" + taskId + " not found");
         }
         for (Entity e : entities) {
-            if (e instanceof Step && ((Step) e).taskRef == taskId) {
-                Step step = (Step) e;
+            if (e instanceof Step step && step.taskRef == taskId) {
                 step.status = Step.Status.Completed;
                 update(step);
             }
@@ -32,8 +33,7 @@ public class TaskService {
 
     public static void setAsInProgress(int taskId) throws InvalidEntityException {
         for (Entity e : entities) {
-            if (e instanceof Task && e.id == taskId) {
-                Task task = (Task) e;
+            if (e instanceof Task task && e.id == taskId) {
                 task.status = Task.Status.InProgress;
                 update(task);
                 return;
@@ -44,8 +44,7 @@ public class TaskService {
 
     public static void setAsNotStarted(int taskId) throws InvalidEntityException {
         for (Entity e : entities) {
-            if (e instanceof Task && e.id == taskId) {
-                Task task = (Task) e;
+            if (e instanceof Task task && e.id == taskId) {
                 task.status = Task.Status.NotStarted;
                 update(task);
                 return;
@@ -58,10 +57,7 @@ public class TaskService {
         entities.removeIf(e -> {
             if (e instanceof Task && e.id == taskId) {
                 return true;
-            } else if (e instanceof Step && ((Step) e).taskRef == taskId) {
-                return true;
-            }
-            return false;
+            } else return e instanceof Step && ((Step) e).taskRef == taskId;
         });
     }
 
@@ -71,8 +67,7 @@ public class TaskService {
 
     public static void updateTask(Task task) throws InvalidEntityException {
         for (Entity e : entities) {
-            if (e instanceof Task && e.id == task.id) {
-                Task task2 = (Task) e;
+            if (e instanceof Task task2 && e.id == task.id) {
                 task2.title = task.title;
                 task2.status = task.status;
                 update(task2);
@@ -85,5 +80,44 @@ public class TaskService {
     public static void addTask(Task task) throws InvalidEntityException {
         task.status = Task.Status.NotStarted;
         add(task);
+    }
+
+    public static Task getTaskById(int id) {
+        for (Entity e : entities) {
+            if (e instanceof Task && e.id == id) {
+                return (Task) e;
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<Task> getAllTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        for (Entity e : entities) {
+            if (e instanceof Task) {
+                tasks.add((Task) e);
+            }
+        }
+        return tasks;
+    }
+
+    public static ArrayList<Task> getIncompleteTasks() {
+        ArrayList<Task> incompleteTasks = new ArrayList<>();
+        for (Entity e : entities) {
+            if (e instanceof Task && ((Task) e).status == Task.Status.InProgress) {
+                incompleteTasks.add((Task) e);
+            }
+        }
+        return incompleteTasks;
+    }
+
+    public static ArrayList<Step> getStepsForTask(int id) {
+        ArrayList<Step> steps = new ArrayList<>();
+        for (Entity e : entities) {
+            if (e instanceof Step && ((Step) e).taskRef == id && e.getEntityCode() == 2) {
+                steps.add((Step) e);
+            }
+        }
+        return steps;
     }
 }

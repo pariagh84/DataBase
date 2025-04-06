@@ -6,6 +6,15 @@ import java.util.Date;
 
 public class Step extends Entity {
     public static final int ENTITY_CODE = 2;
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public Date getLastModificationDate() {
+        return lastModificationDate;
+    }
+
     public enum Status {
         NotStarted, Completed
     }
