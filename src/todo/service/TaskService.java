@@ -83,12 +83,7 @@ public class TaskService {
     }
 
     public static Task getTaskById(int id) {
-        for (Entity e : entities) {
-            if (e instanceof Task && e.id == id) {
-                return (Task) e;
-            }
-        }
-        return null;
+        return (Task) entities.get(id);
     }
 
     public static ArrayList<Task> getAllTasks() {
