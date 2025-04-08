@@ -70,7 +70,7 @@ public class Database {
     public static ArrayList<Entity> getAll(int entityCode) {
         ArrayList<Entity> wanted = new ArrayList<>();
         for (Entity e : entities) {
-            if (e.id == entityCode) {
+            if (e.getEntityCode() == entityCode) {
                 wanted.add(e.copy());
             }
         }

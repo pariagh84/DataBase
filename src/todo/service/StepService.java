@@ -8,11 +8,8 @@ import todo.entity.Task;
 import static db.Database.*;
 
 public class StepService {
-    private static int nextId = 1;
-
     public static Step saveStep(int taskRef, String title) throws InvalidEntityException {
         Step step = new Step();
-        step.id = nextId++;
         step.taskRef = taskRef;
         step.title = title;
         step.status = Step.Status.NotStarted;
