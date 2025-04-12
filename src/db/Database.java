@@ -14,18 +14,16 @@ public class Database {
     private Database() {}
 
     public static void add(Entity e) throws InvalidEntityException {
-        //Validator validator = validators.get(e.getEntityCode());
-        //validator.validate(e);
+        Validator validator = validators.get(e.getEntityCode());
+        if (validator != null) {
+            validator.validate(e);
+        }
         e.id = newID++;
         Entity copiedEntity = e.copy();
-        Date now = new Date();
         if (copiedEntity instanceof Trackable t) {
+            Date now = new Date();
             t.setCreationDate(now);
             t.setLastModificationDate(now);
-        }
-        if (e instanceof Trackable original) {
-            original.setCreationDate(now);
-            original.setLastModificationDate(now);
         }
         entities.add(copiedEntity);
     }
