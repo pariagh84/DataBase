@@ -1,5 +1,6 @@
 package todo.service;
 
+import db.Database;
 import db.Entity;
 import db.exception.InvalidEntityException;
 import todo.entity.Task;
@@ -83,7 +84,7 @@ public class TaskService {
     }
 
     public static Task getTaskById(int id) {
-        return (Task) entities.get(id);
+        return (Task) Database.get(id);
     }
 
     public static ArrayList<Task> getAllTasks() {
@@ -99,7 +100,7 @@ public class TaskService {
     public static ArrayList<Task> getIncompleteTasks() {
         ArrayList<Task> incompleteTasks = new ArrayList<>();
         for (Entity e : entities) {
-            if (e instanceof Task && ((Task) e).status == Task.Status.InProgress) {
+            if (e instanceof Task && (((Task) e).status == Task.Status.InProgress || ((Task) e).status == Task.Status.NotStarted)) {
                 incompleteTasks.add((Task) e);
             }
         }

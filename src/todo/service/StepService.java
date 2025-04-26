@@ -5,6 +5,8 @@ import db.exception.InvalidEntityException;
 import todo.entity.Step;
 import todo.entity.Task;
 
+import java.util.Date;
+
 import static db.Database.*;
 
 public class StepService {
@@ -29,14 +31,15 @@ public class StepService {
         throw new InvalidEntityException("Step not found");
     }
 
-    public static void updateStep(int taskRef, String title, Step.Status status) throws InvalidEntityException {
+    public static void updateStep(int id, String title, Step.Status status) throws InvalidEntityException {
         for (Entity e : entities) {
-            Step step = (Step) e;
-            if (step.taskRef == taskRef) {
-                step.title = title;
-                step.status = status;
-                update(step);
-                return;
+            if (e instanceof Step step) {
+                if (step.id == id) {
+                    step.title = title;
+                    step.status = status;
+                    update(step);
+                    return;
+                }
             }
         }
     }

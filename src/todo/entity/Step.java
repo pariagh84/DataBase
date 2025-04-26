@@ -1,14 +1,25 @@
 package todo.entity;
 
 import db.Entity;
+import db.Trackable;
 
 import java.util.Date;
 
-public class Step extends Entity {
+public class Step extends Entity implements Trackable {
     public static final int ENTITY_CODE = 2;
+
+    @Override
+    public void setCreationDate(Date date) {
+        creationDate = date;
+    }
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    @Override
+    public void setLastModificationDate(Date date) {
+        lastModificationDate = date;
     }
 
     public Date getLastModificationDate() {
@@ -26,6 +37,7 @@ public class Step extends Entity {
     @Override
     public Entity copy() {
         Step copyStep = new Step();
+        copyStep.id = id;
         copyStep.taskRef = this.taskRef;
         copyStep.title = this.title;
         copyStep.status = this.status;

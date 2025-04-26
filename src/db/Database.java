@@ -1,6 +1,7 @@
 package db;
 
 import db.exception.*;
+import todo.entity.Step;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +39,10 @@ public class Database {
     }
 
         public static void update(Entity e) throws EntityNotFoundException, InvalidEntityException {
-            //Validator validator = validators.get(e.getEntityCode());
-            //validator.validate(e);
+            Validator validator = validators.get(e.getEntityCode());
+            if (validator != null) {
+                validator.validate(e);
+            }
             for (Entity entity : entities) {
                 if (entity.id == e.id) {
                     int index = entities.indexOf(entity);

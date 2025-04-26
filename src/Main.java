@@ -2,6 +2,8 @@ import db.*;
 import db.exception.*;
 import todo.entity.*;
 import todo.service.*;
+import todo.validator.StepValidator;
+import todo.validator.TaskValidator;
 
 
 import java.text.*;
@@ -12,6 +14,10 @@ public class Main {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     public static void main(String[] args) {
+        Validator stepValidator = new StepValidator();
+        Validator taskValidator = new TaskValidator();
+        Database.registerValidator(Task.ENTITY_CODE, taskValidator);
+        Database.registerValidator(Step.ENTITY_CODE, stepValidator);
         Scanner scanner = new Scanner(System.in);
         while (true) {
             printMenu();
@@ -101,10 +107,10 @@ public class Main {
         System.out.println("ID:");
         int id = Integer.parseInt(scanner.nextLine());
         Entity removed = null;
-        for (Entity e : db.Database.entities) {
+        for (Entity e : Database.entities) {
             if (e.id == id) {
                 removed = e;
-                db.Database.entities.remove(e);
+                Database.entities.remove(e);
                 break;
             }
         }
@@ -157,7 +163,7 @@ public class Main {
             default:
                 throw new InvalidEntityException("Invalid field: " + field);
         }
-        db.Database.update(task);
+        Database.update(task);
         System.out.println("Successfully updated the task.");
         System.out.println("Field: " + field);
         System.out.println("Old Value: " + oldValue);
@@ -169,15 +175,16 @@ public class Main {
         System.out.println("ID:");
         int id = Integer.parseInt(scanner.nextLine());
         Step step = null;
-        for (Entity e : db.Database.entities) {
-            if (e instanceof Step && e.id == id) {
-                step = (Step) e;
-                break;
-            }
-        }
-        if (step == null) {
-            throw new InvalidEntityException("Step with ID=" + id + " not found");
-        }
+//        for (Entity e : Database.entities) {
+//            if (e instanceof Step && e.id == id) {
+//                step = (Step) e;
+//                break;
+//            }
+//        }
+        step = (Step) Database.get(id);
+//        if (step == null) {
+//            throw new InvalidEntityException("Step with ID=" + id + " not found");
+//        }
         System.out.println("Field:");
         String field = scanner.nextLine();
         System.out.println("New Value:");
@@ -187,7 +194,7 @@ public class Main {
             case "title":
                 oldValue = step.title;
                 step.title = newValue;
-                db.Database.update(step);
+                Database.update(step);
                 break;
             case "status":
                 oldValue = step.status.toString();
@@ -197,6 +204,7 @@ public class Main {
             default:
                 throw new InvalidEntityException("Invalid field: " + field);
         }
+
         System.out.println("Successfully updated the step.");
         System.out.println("Field: " + field);
         System.out.println("Old Value: " + oldValue);
